@@ -1,0 +1,233 @@
+﻿@model IEnumerable<KnowledgeCompetitionWebApp.Models.Category>
+
+@{
+    Layout = "~/Views/Shared/_TeacherLayout.cshtml";
+}
+<div class="row clearfix m-b-10">
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+        <a href="@Url.Action("NewCategory", "Teacher")" class="btn bg-green waves-effect">
+            <i class="material-icons">save</i>
+            <span>KATEGORİ EKLE</span>
+        </a>
+    </div>
+</div>
+
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2>
+                    KATEGORİLER
+                </h2>
+            </div>
+            <div class="body">
+                @if (Model == null || !Model.Any())
+                {
+                    <div class="alert alert-danger">
+                        <strong>Üzgünüz!</strong> Sistemde kayıtlı kategori bulunmamaktadır.
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                            <thead>
+                                <tr>
+                                    <th>Ad</th>
+                                    <th>Durum</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>Ad</th>
+                                    <th>Durum</th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                @foreach (var category in Model)
+                                {
+                                    <tr id="user_@category.Id">
+                                        <th id="col_categoryname_@category.Id">@category.Name</th>
+                                        @if (category.IsActive)
+                                        {
+                                            <th id="col_isActive_@category.Id">Aktif</th>
+                                        }
+                                        else
+                                        {
+                                            <th id="col_isActive_@category.Id">Aktif Değil</th>
+                                        }
+                                        <th>
+                                            <button type="button" class="btn bg-orange waves-effect" id="edit_" onclick="Edit(@category.Id)" data-toggle="modal">
+                                                <i class="material-icons">mode_edit</i>
+                                                <span>Düzenle</span>
+                                            </button>
+                                            <button type="button" class="btn bg-red waves-effect" id="delete_@category.Id" onclick="Delete(@category.Id)">
+                                                <i class="material-icons">report_problem</i>
+                                                <span>Sil</span>
+                                            </button>
+                                        </th>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="alert alert-success m-t-10 info-alert" id="delete_success">
+                        <strong>Başarılı!</strong> Silme işlemi gerçekleşti.
+                    </div>
+                    <div class="alert alert-danger m-t-10 info-alert" id="delete_err">
+                        <strong>Hata!</strong> Silme işlemi bir sepebten ötürü başarısız oldu.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="UpdateCategoryModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form id="form_advanced_validation" method="POST">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="UpdateUserModalLabel">Kategori Güncelleme Ekranı</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            <input type="text" class="form-control" name="category" required="" aria-required="true" id="category">
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="radio" name="active" id="active" class="with-gap" value="1">
+                        <label for="active">Aktif</label>
+
+                        <input type="radio" name="active" id="de_active" class="with-gap" value="0">
+                        <label for="de_active" class="m-l-20">Aktif Değil</label>
+                    </div>
+                    <input type="hidden" id="id" name="id" />
+                    <div class="alert alert-success m-t-10 info-alert" id="update_success">
+                        <strong>Başarılı!</strong> Güncelleme işlemi gerçekleşti.
+                    </div>
+                    <div class="alert alert-danger m-t-10 info-alert" id="update_err">
+                        <strong>Hata!</strong> Güncelleme işlemi bir sepebten ötürü başarısız oldu.
+                    </div>
+                    <div class="alert alert-warning m-t-10 info-alert" id="update_warning">
+                        <strong>Uyarı!</strong> Bu isme sahip bir kategori zaten var.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger waves-effect">Kaydet</button>
+                    <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">Kapat</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('.info-alert').hide();
+            $("#form_advanced_validation").submit(function (e) {
+                e.preventDefault();
+                let isActive = $('input[name="active"]:checked').val() === "0" ? false : true;
+                let id = $("#id").val();
+                if ($('#category').val().trim() === '') {
+                    return;
+                }
+                else {
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("Category", "Edit")',
+                        data: {
+                            categoryName: $('#category').val(),
+                            isActive: isActive,
+                            id: id
+                        },
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.status === 0) {
+                                $("#update_err").fadeIn();
+                                setTimeout(function () {
+                                    $("#update_err").fadeOut();
+                                    $("#UpdateCategoryModal").modal("hide");
+                                }, 2000);
+                            }
+                            else if (data.status === 1) {
+                                $("#col_categoryname_" + data.id).html(data.name);
+                                $("#col_isActive_" + data.id).html(data.surname);
+                                $("#update_success").fadeIn();
+                                setTimeout(function () {
+                                    $("#update_success").fadeOut();
+                                    $("#UpdateCategoryModal").modal("hide");
+                                }, 2000);
+
+                            }
+                            else {
+                                $("#update_warning").fadeIn();
+                                setTimeout(function () {
+                                    $("#update_warning").fadeOut();
+                                    $("#UpdateCategoryModal").modal("hide");
+                                }, 2000);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+        function Edit(id) {
+                if (id === null)
+                    return;
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetCategory", "Edit")',
+                    data: { id: id },
+                    dataType: "json",
+                    success: function (data) {
+                        $("#category").val(data.name);
+                        if (data.isActive) {
+                            $('#active').attr("checked", "checked");
+                        }
+                        else {
+                            $('#de_active').attr("checked", "checked");
+                        }
+                        $("#UpdateCategoryModal").modal("show");
+                        $("#id").val(data.id);
+                    }
+                });
+            }
+
+            function Delete(id) {
+                if (confirm("Kategoriyi silmek istediğinize emin misiniz?")) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("Category", "Delete")',
+                        data: { id : id },
+                        datatype: "json",
+                        success: function (data) {
+                            if (data.status === 1) {
+                                $("#category_" + id).fadeOut();
+                                $("#delete_success").fadeIn();
+                                setTimeout(function () {
+                                    $("#delete_success").fadeOut();
+                                }, 2000);
+                            } else {
+                                $("#delete_err").fadeIn();
+                                setTimeout(function () {
+                                    $("#delete_err").fadeOut();
+                                }, 2000);
+                            }
+                        }
+                    });
+                }
+            }
+
+    </script>
+}
+
+

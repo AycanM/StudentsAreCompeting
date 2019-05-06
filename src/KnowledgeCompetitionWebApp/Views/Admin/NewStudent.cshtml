@@ -1,0 +1,119 @@
+﻿
+@{
+    ViewBag.Title = "New Student | Admin";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2>Öğrenci Kayıt Ekranı</h2>
+
+            </div>
+            <div class="body">
+
+                <form id="form_advanced_validation" method="POST">
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            <input type="text" class="form-control" name="name" required="" aria-required="true">
+                            <label class="form-label">Ad</label>
+                        </div>
+                    </div>
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            <input type="text" class="form-control" name="surname" required="" aria-required="true">
+                            <label class="form-label">Soyad</label>
+                        </div>
+                    </div>
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            <input type="email" class="form-control" name="email" required="" aria-required="true" aria-invalid="true">
+                            <label class="form-label">Email</label>
+                        </div>
+                        <label id="email-error" class="error" for="email" style="display: none;"></label>
+                    </div>
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            <input type="password" class="form-control" name="minmaxlength" maxlength="20" minlength="6" required="" aria-required="true">
+                            <label class="form-label">Parola</label>
+                        </div>
+                        <div class="help-info">Min. 6, Maks. 20 karakter</div>
+                    </div>
+                    <button class="btn btn-primary waves-effect" type="submit">KAYDET</button>
+                </form>
+                <div class="alert alert-success m-t-10">
+                    <strong>Başarılı!</strong> Kayıt işlemi gerçekleşti.
+                </div>
+                <div class="alert alert-danger m-t-10">
+                    <strong>Hata!</strong> Kayıt işlemi bir sepebten ötürü başarısız oldu.
+                </div>
+                <div class="alert alert-warning m-t-10">
+                    <strong>Uyarı!</strong> Bu e-maile sahip bir kullanıcı zaten var.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+
+    <script>
+        $(document).ready(function () {
+            $(".alert").hide();
+            $('form').submit(function (event) {
+                event.preventDefault();
+                if ($('input[name="name"]').val().trim() === '' || $('input[name="surname"]').val().trim() === '' || $('input[name="email"]').val().trim() === '' || $('input[name="minmaxlength"]').val().trim() == '') {
+                    return;
+                }
+                else if (!isValidEmailAddress($('input[name="email"]').val().trim())) {
+                    return;
+                }
+                else if ($('input[name="minmaxlength"]').val().length < 6 || $('input[name="minmaxlength"]').val().length > 20) {
+                    return;
+                }
+                else {
+                    var formData = $('#form_advanced_validation').serialize();
+                    console.log(formData);
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("User", "Save")',
+                        data: {
+                            name: $('input[name="name"]').val().trim(),
+                            surname: $('input[name="surname"]').val().trim(),
+                            email: $('input[name="email"]').val().trim(),
+                            password: $('input[name="minmaxlength"]').val().trim(),
+                            userType : 2
+                        },
+                        datatype: "json",
+                        success: function (data) {
+                            if (data.status === 0) { // Hata oluşması durumunda
+                                $(".alert-danger").fadeIn();
+                                setTimeout(function () {
+                                    $(".alert-danger").fadeOut();
+                                }, 2000);
+                            }
+                            if (data.status === 1) {// Başarılı Olma durumunda
+                                document.getElementById("form_advanced_validation").reset();
+                                $(".alert-success").fadeIn();
+                                setTimeout(function () {
+                                    $(".alert-success").fadeOut();
+                                }, 2000);
+                                
+                                
+                            }
+                            if (data.status === 2) { // Aynı emaile sahip bir kayıt olması durumunda
+                                $(".alert-warning").fadeIn();
+                                setTimeout(function () {
+                                    $(".alert-warning").fadeOut();
+                                }, 2000);
+                            }
+
+                            $('div').removeClass("focused");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+}

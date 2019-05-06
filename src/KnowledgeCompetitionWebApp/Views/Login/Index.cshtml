@@ -1,0 +1,71 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+
+<form id="sign_in" method="POST">
+    <div class="msg">Oturum açın!</div>
+    <div class="input-group">
+        <span class="input-group-addon">
+            <i class="material-icons">person</i>
+        </span>
+        <div class="form-line">
+            <input type="text" class="form-control" name="email" placeholder="Email" required autofocus>
+        </div>
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon">
+            <i class="material-icons">lock</i>
+        </span>
+        <div class="form-line">
+            <input type="password" class="form-control" name="password" placeholder="Parola" required>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-4 col-xs-offset-8">
+            <button class="btn btn-block bg-pink waves-effect" type="submit">SIGN IN</button>
+        </div>
+    </div>
+</form>
+
+@section scripts{
+    <script>
+        $(document).ready(function(){
+            $("form").submit(function(e){
+                e.preventDefault();
+                let formData = $("form").serialize();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("TryLogin", "Login")',
+                    data: formData,
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data);
+                        if (data.status === 0) { //Kullanıcı yok
+                            alert("Böyle bir kullanıcı yok");
+                        }
+                        else if (data.status === 1) {// Kullanıcı bulundu
+
+                            if (data.type === 0) {
+                                window.location.href = '@Url.Action("Student", "Admin")';
+                            }
+                            else if (data.type === 1) {
+                                window.location.href = '@Url.Action("Student", "Teacher")';
+
+                            }
+                            else {
+                                window.location.href = '@Url.Action("AvailableCompetition", "Student")';
+                            }
+                        }
+                        else
+                        {
+                            alert("Girdiğiniz parola hatalı");
+                        }
+                    }
+
+                });
+
+            });
+        });
+    </script>
+}

@@ -1,0 +1,44 @@
+﻿
+@{
+    ViewBag.Title = "AvailableCompetition";
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+}
+
+
+@foreach (var category in Model)
+{
+    <a href="#" data-id="@category.Id">
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+            <div class="card">
+                <div class="header bg-purple">
+                    <h2>
+                        @category.Name.ToUpper()<small>Yarışma başlatmak için tıklayınız...</small>
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </a>
+}
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $("a").click(function (e) {
+                e.preventDefault();
+                let id = $(this).data('id');
+                console.log(id);
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("Competition", "Save")',
+                    data: {
+                        id: id
+                    },
+                    dataType :'json',
+                    success: function (data) {
+
+                    }
+                });
+            });
+        });
+    </script>    
+}

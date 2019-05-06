@@ -1,0 +1,322 @@
+﻿@model KnowledgeCompetitionWebApp.Models.CategoryQuestion
+@{
+    ViewBag.Title = "Question";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row clearfix m-b-10">
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+        <a href="@Url.Action("NewQuestion", "Admin")" class="btn bg-green waves-effect">
+            <i class="material-icons">save</i>
+            <span>SORU EKLE</span>
+        </a>
+    </div>
+</div>
+
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2>
+                    SORULAR
+                </h2>
+            </div>
+            <div class="body">
+                @if (Model == null || Model.Questions == null || Model.Categories == null || !Model.Categories.Any() || !Model.Questions.Any())
+                {
+                    <div class="alert alert-danger">
+                        <strong>Üzgünüz!</strong> Sistemde kayıtlı soru bulunmamaktadır.
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                            <thead>
+                                <tr>
+                                    <th>Soru</th>
+                                    <th>A</th>
+                                    <th>B</th>
+                                    <th>C</th>
+                                    <th>D</th>
+                                    <th>Doğru Seç...</th>
+                                    <th>Kategori</th>
+                                    <th>Seviye</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>Soru</th>
+                                    <th>A</th>
+                                    <th>B</th>
+                                    <th>C</th>
+                                    <th>D</th>
+                                    <th>Doğru Seç...</th>
+                                    <th>Kategori</th>
+                                    <th>Seviye</th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                @foreach (var question in Model.Questions)
+                                {
+                                    <tr id="question_@question.Id">
+                                        <th>@question.QuestionTxt</th>
+                                        <th>@question.OptionA</th>
+                                        <th>@question.OptionB</th>
+                                        <th>@question.OptionC</th>
+                                        <th>@question.OptionD</th>
+                                        <th>@Model.CorrectOptions.Where(a => a.QuestionId == question.Id).Select(a => a.CorrectOption).FirstOrDefault()</th>
+                                        <th>@Model.Categories.Where(c => c.Id == question.CategoryId).Select(c => c.Name).FirstOrDefault()</th>
+                                        <th>@question.Level</th>
+                                        <th>
+                                            <button type="button" class="btn bg-orange waves-effect" id="edit_@question.Id" onclick="Edit(@question.Id)" data-toggle="modal">
+                                                <i class="material-icons">mode_edit</i>
+                                                <span>Düzenle</span>
+                                            </button>
+                                            <button type="button" class="btn bg-red waves-effect" id="delete_@question.Id" onclick="Delete(@question.Id)">
+                                                <i class="material-icons">report_problem</i>
+                                                <span>Sil</span>
+                                            </button>
+                                        </th>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="alert alert-success m-t-10 info-alert" id="delete_success">
+                        <strong>Başarılı!</strong> Silme işlemi gerçekleşti.
+                    </div>
+                    <div class="alert alert-danger m-t-10 info-alert" id="delete_err">
+                        <strong>Hata!</strong> Silme işlemi bir sepebten ötürü başarısız oldu.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@if (Model != null)
+{
+    <div class="modal fade" id="UpdateQuestionModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <form id="form_advanced_validation" method="POST">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="UpdateUserModalLabel">Soru Güncelleme Ekranı</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <textarea name="question" id="question" rows="4" class="form-control no-resize" required="" aria-required="true" placeholder="Soruyu giriniz...">
+                            </textarea>
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="optionA" id="optionA" required="" aria-required="true" placeholder="A seçeneğini giriniz">
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="optionB" id="optionB" required="" aria-required="true" placeholder="B seçeneğini giriniz">
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="optionC" id="optionC" required="" aria-required="true" placeholder="C seçeneğini giriniz">
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="optionD" id="optionD" required="" aria-required="true" placeholder="D seçeneğini giriniz">
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-sm-12">
+                                <select class="form-control show-tick" id="correctOption" name="correct">
+                                    <option value="0" selected>-- Lütfen doğru seçeneği belirleyiniz --</option>
+                                    <option value="a">A</option>
+                                    <option value="b">B</option>
+                                    <option value="c">C</option>
+                                    <option value="d">D</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-sm-12">
+                                <select class="form-control show-tick" id="category" name="categoryId">
+                                    <option value="0" selected>-- Lütfen kategori seçiniz --</option>
+                                    @foreach (var category in Model.Categories)
+                                    {
+                                        <option value="@category.Id">@category.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-sm-12">
+                                <select class="form-control show-tick" id="level" name="level">
+                                    <option value="0" selected>-- Lütfen zorluk seviyesi belirleyiniz --</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                </select>
+                            </div>
+                        </div>
+                        <input type="hidden" id="id" name="id" />
+                        <div class="alert alert-success m-t-10 info-alert" id="update_success">
+                            <strong>Başarılı!</strong> Güncelleme işlemi gerçekleşti.
+                        </div>
+                        <div class="alert alert-danger m-t-10 info-alert" id="update_err">
+                            <strong>Hata!</strong> Güncelleme işlemi bir sepebten ötürü başarısız oldu.
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger waves-effect">Kaydet</button>
+                        <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">Kapat</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+@section styles{
+    <link href="~/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+}
+
+@section scripts{
+    <script src="~/plugins/bootstrap-select/js/bootstrap-select.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.info-alert').hide();
+            $("#form_advanced_validation").submit(function (e) {
+                e.preventDefault();
+                if ($('#question').val().trim() === '' || $('#optionA').val().trim() === '' || $('#optionB').val().trim() === '' || $('#optionC').val().trim() === '' || $('#optionD').val().trim() === '') {
+                    return;
+                }
+                else if ($('#correctOption').val() === '') {
+                    alert('Lütfen doğru seçeneği belirleyiniz');
+                    return;
+                }
+                else if ($('#category').val() === '') {
+                    alert('Lütfen kategori belirleyiniz');
+                    return;
+                }
+                else {
+                    let formData = $("#form_advanced_validation").serialize();
+                    console.log(formData);
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("Question", "Edit")',
+                        data: formData,
+                        dataType: "json",
+                        success: function (data) {
+                             if (data.status === 0) { // Hata oluşması durumunda
+                                $("#update_err").fadeIn();
+                                setTimeout(function () {
+                                    $("#update_err").fadeOut();
+                                    $("#UpdateQuestionModal").modal("hide");
+                                }, 2000);
+                            }
+                            if (data.status === 1) {// Başarılı Olma durumunda
+                                document.getElementById("form_advanced_validation").reset();
+                                $("#update_success").fadeIn();
+                                setTimeout(function () {
+                                    $("#update_success").fadeOut();
+                                    $("#UpdateQuestionModal").modal("hide");
+                                }, 2000);
+                            }
+                            if (data.status === 2) { // Aynı emaile sahip bir kayıt olması durumunda
+                                $("#update_warning").fadeIn();
+                                setTimeout(function () {
+                                    $("#update_warning").fadeOut();
+                                    $("#UpdateQuestionModal").modal("hide");
+                                }, 2000);
+                            }
+                            $('div').removeClass("focused");
+                            $('[data-id="correctOption"]').attr("title", "-- Lütfen doğru seçeneği belirleyiniz --");
+                            $('[data-id="correctOption"] .filter-option').html("-- Lütfen doğru seçeneği belirleyiniz --");
+                            $('[data-id="category"]').attr("title", "-- Lütfen kategori seçiniz --");
+                            $('[data-id="category"] .filter-option').html("-- Lütfen kategori seçiniz --");
+                            $('[data-id="level"]').attr("title", "-- Lütfen zorluk seviyesi belirleyiniz --");
+                            $('[data-id="level"] .filter-option').html("-- Lütfen zorluk seviyesi belirleyiniz --");
+
+                            document.getElementById("category").selectedIndex = 0;
+                            document.getElementById("correctOption").selectedIndex = 0;
+                            document.getElementById("level").selectedIndex = 0;
+                        }
+                    });
+                }
+
+            });
+        });
+
+        function Edit(id) {
+            if (id === null)
+                return;
+            $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetQuestion", "Edit")',
+                    data: { id: id },
+                    dataType: "json",
+                success: function (data) {
+                        $("#id").val(data.id);
+                        $("#question").val(data.question);
+                        $("#optionA").val(data.optionA);
+                        $("#optionB").val(data.optionB);
+                        $("#optionC").val(data.optionC);
+                        $("#optionD").val(data.optionD);
+
+                        $("#correctOption").val(data.correctOption);
+                        $('[data-id="correctOption"]').attr("title", data.correctOption);
+                        $('[data-id="correctOption"] .filter-option').html(data.correctOption);
+
+                        $("#category").val(data.category);
+                        $('[data-id="category"]').attr("title", data.categoryName);
+                        $('[data-id="category"] .filter-option').html(data.categoryName);
+
+                        $("#level").val(data.level);
+                        $('[data-id="level"]').attr("title", data.level);
+                        $('[data-id="level"] .filter-option').html(data.level);
+
+                        $("#UpdateQuestionModal").modal("show");
+                    }
+                });
+        }
+
+        function Delete(id) {
+                if (confirm("Soruyu silmek istediğinize emin misiniz?")) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("Question", "Delete")',
+                        data: { id : id },
+                        datatype: "json",
+                        success: function (data) {
+                            if (data.status === 1) {
+                                $("#question_" + id).fadeOut();
+                                $("#delete_success").fadeIn();
+                                setTimeout(function () {
+                                    $("#delete_success").fadeOut();
+                                }, 2000);
+                            } else {
+                                $("#delete_err").fadeIn();
+                                setTimeout(function () {
+                                    $("#delete_err").fadeOut();
+                                }, 2000);
+                            }
+                        }
+                    });
+                }
+            }
+    </script>
+
+}

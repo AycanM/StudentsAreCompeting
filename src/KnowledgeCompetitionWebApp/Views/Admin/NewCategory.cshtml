@@ -1,0 +1,96 @@
+﻿
+@{
+    ViewBag.Title = "New Category | Admin";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2>Kategori Kayıt Ekranı</h2>
+
+            </div>
+            <div class="body">
+
+                <form id="form_advanced_validation" method="POST">
+                    <div class="form-group form-float">
+                        <div class="form-line">
+                            <input type="text" class="form-control" name="category" required="" aria-required="true" id="category">
+                            <label class="form-label">Kategori Adı</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="radio" name="active" id="active" class="with-gap" value="1">
+                        <label for="active">Aktif</label>
+
+                        <input type="radio" name="active" id="de_active" class="with-gap" value="0" checked>
+                        <label for="de_active" class="m-l-20">Aktif Değil</label>
+                    </div>
+                    <button class="btn btn-primary waves-effect" type="submit">KAYDET</button>
+                </form>
+                <div class="alert alert-success m-t-10">
+                    <strong>Başarılı!</strong> Kayıt işlemi gerçekleşti.
+                </div>
+                <div class="alert alert-danger m-t-10">
+                    <strong>Hata!</strong> Kayıt işlemi bir sepebten ötürü başarısız oldu.
+                </div>
+                <div class="alert alert-warning m-t-10">
+                    <strong>Uyarı!</strong> Böyle bir kategori zaten var.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+
+    <script>
+        $(document).ready(function () {
+            $(".alert").hide();
+            $('form').submit(function (event) {
+                event.preventDefault();
+                if ($('input[name="category"]').val().trim() === '') {
+                    return;
+                }
+                else {
+                    
+                    let isActive = $('input[name="active"]:checked').val() === "0" ? false : true;
+                    console.log(isActive);
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("Category", "Save")',
+                        data: {
+                            categoryName: $('#category').val(),
+                            isActive: isActive
+                        },
+                        datatype: "json",
+                        success: function (data) {
+                            if (data.status === 0) { // Hata oluşması durumunda
+                                $(".alert-danger").fadeIn(0);
+                                setTimeout(function () {
+                                    $(".alert-danger").fadeOut(1000);
+                                }, 2000);
+                            }
+                            if (data.status === 1) {// Başarılı Olma durumunda
+                                document.getElementById("form_advanced_validation").reset();
+                                $(".alert-success").fadeIn();
+                                setTimeout(function () {
+                                    $(".alert-success").fadeOut(1000);
+                                }, 2000);
+
+
+                            }
+                            if (data.status === 2) { // Aynı emaile sahip bir kayıt olması durumunda
+                                $(".alert-warning").fadeIn(1500);
+                                setTimeout(function () {
+                                    $(".alert-warning").fadeOut(2500);
+                                }, 2000);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+}
