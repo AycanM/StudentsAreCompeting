@@ -16,73 +16,200 @@ namespace KnowledgeCompetitionWebApp.Controllers
         {
             dbContext = new Context();
         }
-        
+
         public ActionResult Student()
         {
-            var model = dbContext.Users.Where(u => u.UserType == 2).ToList();
-            return View(model);
+            try
+            {
+                if (Session["userType"] != null && Convert.ToInt16(Session["userType"]) == 0)
+                {
+                    var model = dbContext.Users.Where(u => u.UserType == 2).ToList();
+                    return View(model);
+                }
+                return RedirectToAction("Index", "Login");
+
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+
         }
         public ActionResult NewStudent()
         {
-            return View();
+            try
+            {
+                if (Session["userType"] != null && Convert.ToInt16(Session["userType"]) == 0)
+                {
+
+                    return View();
+                }
+                return RedirectToAction("Index", "Login");
+
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Login");
+            }
         }
 
         public ActionResult Teacher()
         {
-            var model = dbContext.Users.Where(u => u.UserType == 1).ToList();
-            return View(model);
+            try
+            {
+                if (Session["userType"] != null && Convert.ToInt16(Session["userType"]) == 0)
+                {
+                    var model = dbContext.Users.Where(u => u.UserType == 1).ToList();
+                    return View(model);
+                }
+                return RedirectToAction("Index", "Login");
+
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Index", "Login");
+            }
         }
 
         public ActionResult NewTeacher()
         {
-            return View();
+            try
+            {
+                if (Session["userType"] != null && Convert.ToInt16(Session["userType"]) == 0)
+                {
+
+                    return View();
+                }
+                return RedirectToAction("Index", "Login");
+
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Login");
+            }
         }
 
         public ActionResult Admin()
         {
-            var model = dbContext.Users.Where(u => u.UserType == 0).ToList();
-            return View(model);
+            try
+            {
+                if (Session["userType"] != null && Convert.ToInt16(Session["userType"]) == 0)
+                {
+                    var model = dbContext.Users.Where(u => u.UserType == 0).ToList();
+                    return View(model);
+                }
+                return RedirectToAction("Index", "Login");
+
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Index", "Login");
+            }
         }
 
         public ActionResult NewAdmin()
         {
-            return View();
+            try
+            {
+                if (Session["userType"] != null && Convert.ToInt16(Session["userType"]) == 0)
+                {
+
+                    return View();
+                }
+                return RedirectToAction("Index", "Login");
+
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Login");
+            }
         }
 
         public ActionResult Category()
         {
-            var model = dbContext.Categories.ToList();
-            return View(model);
+            try
+            {
+                if (Session["userType"] != null && Convert.ToInt16(Session["userType"]) == 0)
+                {
+                    var model = dbContext.Categories.ToList();
+                    return View(model);
+                }
+                return RedirectToAction("Index", "Login");
+
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Index", "Login");
+            }
         }
 
         public ActionResult NewCategory()
         {
             //var model = dbContext.Categories.ToList();
-            return View();
+            try
+            {
+                if (Session["userType"] != null && Convert.ToInt16(Session["userType"]) == 0)
+                {
+
+                    return View();
+                }
+                return RedirectToAction("Index", "Login");
+
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Login");
+            }
         }
 
         public ActionResult Question()
         {
-            if(dbContext.Categories.Where(c => c.IsActive == true).Any() && dbContext.Questions.Any()){
-                var categories = dbContext.Categories.Where(c => c.IsActive == true).ToList();
-                var questions = dbContext.Questions.ToList();
-                var correctAnswers = dbContext.CorrectAnswers.ToList();
-                var model = new CategoryQuestion{
-                    Categories = categories,
-                    Questions = questions,
-                    CorrectOptions = correctAnswers
-                };
-                return View(model);
-            }
+            try
+            {
+                if (Session["userType"] != null && Convert.ToInt16(Session["userType"]) == 0)
+                {
+                    if (dbContext.Categories.Where(c => c.IsActive == true).Any() && dbContext.Questions.Any())
+                    {
+                        var categories = dbContext.Categories.Where(c => c.IsActive == true).ToList();
+                        var questions = dbContext.Questions.ToList();
+                        var correctAnswers = dbContext.CorrectAnswers.ToList();
+                        var model = new CategoryQuestion
+                        {
+                            Categories = categories,
+                            Questions = questions,
+                            CorrectOptions = correctAnswers
+                        };
+                        return View(model);
+                    }
 
-            return View();
+                    return View();
+                }
+
+                return RedirectToAction("Index", "Login");
+            }
+            catch 
+            {
+                return RedirectToAction("Index", "Login");
+            }
         }
 
         public ActionResult NewQuestion()
-        {
-            var model = dbContext.Categories.Where(c => c.IsActive == true).ToList();
-            return View(model);
+        {   
+            try
+            {
+                if (Session["userType"] != null && Convert.ToInt16(Session["userType"]) == 0)
+                {
+                    var model = dbContext.Categories.Where(c => c.IsActive == true).ToList();
+                    return View(model);
+                }
+                return RedirectToAction("Index", "Login");
+
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Login");
+            }
         }
-        
+
     }
 }

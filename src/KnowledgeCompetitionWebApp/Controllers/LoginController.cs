@@ -40,18 +40,18 @@ namespace KnowledgeCompetitionWebApp.Controllers
         {
             try
             {
-                if(Session["userType"] != null && Session["userEmail"] !=null && Session["userName"] != null && Session["userSurname"] != null)
-                {
-                    return Json(
-                        new
-                        {
-                            status = 1,
-                            type = Convert.ToInt16(Session["userType"])
-                        }
-                    );
-                }
-                else
-                {
+                //if(Session["userType"] != null && Session["userEmail"] !=null && Session["userName"] != null && Session["userSurname"] != null)
+                //{
+                //    return Json(
+                //        new
+                //        {
+                //            status = 1,
+                //            type = Convert.ToInt16(Session["userType"])
+                //        }
+                //    );
+                //}
+                //else
+                //{
                     if (!dbContext.Users.Any(u => u.Email.ToLower() == email.ToLower().Trim()))
                         return Json(new { status = 0 });
                     if (dbContext.Users.Any(u => u.Email.ToLower() == email.ToLower().Trim() && u.Password != password))
@@ -68,7 +68,7 @@ namespace KnowledgeCompetitionWebApp.Controllers
                             type = user.UserType
                         }
                     );
-                }
+                //}
             }
             catch (Exception ex)
             {

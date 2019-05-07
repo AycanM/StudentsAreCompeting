@@ -24,14 +24,36 @@ namespace KnowledgeCompetitionWebApp.Controllers
 
         public ActionResult Results()
         {
-            return View();
+            try
+            {
+                if (Session["userType"] != null && Convert.ToInt16(Session["userType"]) == 2)
+                {
+                    return View();
+                }
+                return RedirectToAction("Index", "Login");
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Login");
+            }
         }
 
         public ActionResult AvailableCompetition()
         {
             
-            var model = dbContext.Categories.Where(c => c.IsActive == true).ToList();
-            return View(model);
+            try
+            {
+                if (Session["userType"] != null && Convert.ToInt16(Session["userType"]) == 2)
+                {
+                    var model = dbContext.Categories.Where(c => c.IsActive == true).ToList();
+                    return View(model);
+                }
+                return RedirectToAction("Index", "Login");
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Login");
+            }
         }
     }
 }
