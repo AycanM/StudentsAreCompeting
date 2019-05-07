@@ -20,7 +20,20 @@ namespace KnowledgeCompetitionWebApp.Controllers
         // GET: Login
         public ActionResult Index()
         {
-            return View();
+            if(Session["userType"] != null)
+            {
+                int userType = Convert.ToInt16(Session["userType"]);
+                switch (userType)
+                {
+                    case 0:
+                        return RedirectToAction("Student", "Admin");
+                    case 1:
+                        return RedirectToAction("Student", "Teacher");
+                    case 2:
+                        return RedirectToAction("AvailableCompetition", "Student");
+                }
+            }
+            return View(); 
         }
 
         public JsonResult TryLogin(string email, string password)
