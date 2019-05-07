@@ -134,7 +134,6 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\EditController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\DeleteController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\SaveController.cs" />
