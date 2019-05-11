@@ -855,7 +855,8 @@
     color: #607D8B !important; }
 
 .theme-black .navbar {
-  background-color: #000; }
+    background-color: #35363A;
+}
 
 .theme-black .navbar-brand {
   color: #fff; }
