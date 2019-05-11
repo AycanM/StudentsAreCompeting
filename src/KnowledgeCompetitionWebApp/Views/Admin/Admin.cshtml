@@ -20,10 +20,10 @@
                 </h2>
             </div>
             <div class="body">
-                @if (Model == null || !Model.Any(t => t.UserType == 0))
+                @if (Model == null || !Model.Any(t => t.UserType == 0) || (Model.Count() == 1))
                 {
                     <div class="alert alert-danger">
-                        <strong>Üzgünüz!</strong> Sistemde kayıtlı yönetici bulunmamaktadır.
+                        <strong>Üzgünüz!</strong> Sistemde gösterilecek yönetici bulunmamaktadır.
                     </div>
                 }
                 else
@@ -49,21 +49,24 @@
                             <tbody>
                                 @foreach (var admin in Model)
                                 {
-                                    <tr id="user_@admin.Id">
-                                        <th id="col_name_@admin.Id">@admin.Name</th>
-                                        <th id="col_surname_@admin.Id">@admin.Surname</th>
-                                        <th id="col_name_@admin.Id">@admin.Email</th>
-                                        <th>
-                                            <button type="button" class="btn bg-orange waves-effect" id="edit_@admin.Id" onclick="Edit(@admin.Id)" data-toggle="modal">
-                                                <i class="material-icons">mode_edit</i>
-                                                <span>Düzenle</span>
-                                            </button>
-                                            <button type="button" class="btn bg-red waves-effect" id="delete_@admin.Id" onclick="Delete(@admin.Id)">
-                                                <i class="material-icons">report_problem</i>
-                                                <span>Sil</span>
-                                            </button>
-                                        </th>
-                                    </tr>
+                                    if (Convert.ToInt32(Session["userId"]) != admin.Id)
+                                    {
+                                        <tr id="user_@admin.Id">
+                                            <th id="col_name_@admin.Id">@admin.Name</th>
+                                            <th id="col_surname_@admin.Id">@admin.Surname</th>
+                                            <th id="col_name_@admin.Id">@admin.Email</th>
+                                            <th>
+                                                <button type="button" class="btn bg-orange waves-effect" id="edit_@admin.Id" onclick="Edit(@admin.Id)" data-toggle="modal">
+                                                    <i class="material-icons">mode_edit</i>
+                                                    <span>Düzenle</span>
+                                                </button>
+                                                <button type="button" class="btn bg-red waves-effect" id="delete_@admin.Id" onclick="Delete(@admin.Id)">
+                                                    <i class="material-icons">report_problem</i>
+                                                    <span>Sil</span>
+                                                </button>
+                                            </th>
+                                        </tr>
+                                    }
                                 }
                             </tbody>
                         </table>

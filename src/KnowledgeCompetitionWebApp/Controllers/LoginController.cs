@@ -46,6 +46,7 @@ namespace KnowledgeCompetitionWebApp.Controllers
                 if (dbContext.Users.Any(u => u.Email.ToLower() == email.ToLower().Trim() && u.Password != password))
                     return Json(new { status = 2 });
                 var user = dbContext.Users.Where(u => u.Email == email && u.Password == password).FirstOrDefault();
+                Session["userId"] = user.Id;
                 Session["userType"] = user.UserType;
                 Session["userEmail"] = user.Email;
                 Session["userName"] = user.Name;
@@ -71,6 +72,7 @@ namespace KnowledgeCompetitionWebApp.Controllers
 
         public ActionResult SignOut()
         {
+            Session.Remove("userId");
             Session.Remove("userType");
             Session.Remove("userEmail");
             Session.Remove("userName");

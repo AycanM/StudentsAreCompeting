@@ -44,12 +44,32 @@ namespace KnowledgeCompetitionWebApp.Controllers
 
         public ActionResult AvailableCompetition()
         {
-            
+
             try
             {
                 if (Session["userType"] != null && Convert.ToInt16(Session["userType"]) == 2)
                 {
-                    var model = dbContext.Categories.Where(c => c.IsActive == true).ToList();
+                    List<Models.Category> model = new List<Models.Category>();
+                    List<Models.Question> questions;
+                    foreach (Models.Category category in dbContext.Categories)
+                    {
+                        questions = dbContext.Questions.Where(q => q.CategoryId == category.Id).ToList();
+                        if (questions.Any(q => q.Level == 1) &&
+                            questions.Any(q => q.Level == 2) &&
+                            questions.Any(q => q.Level == 3) &&
+                            questions.Any(q => q.Level == 4) &&
+                            questions.Any(q => q.Level == 5) &&
+                            questions.Any(q => q.Level == 6) &&
+                            questions.Any(q => q.Level == 7) &&
+                            questions.Any(q => q.Level == 8) &&
+                            questions.Any(q => q.Level == 9) &&
+                            questions.Any(q => q.Level == 10)
+                           )
+                        {
+                            model.Add(category);
+                        }
+
+                    }
                     return View(model);
                 }
                 return RedirectToAction("Index", "Login");
