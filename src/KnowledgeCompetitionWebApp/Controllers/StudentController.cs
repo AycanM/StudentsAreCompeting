@@ -15,6 +15,10 @@ namespace KnowledgeCompetitionWebApp.Controllers
         {
             dbContext = new Context();
         }
+        public ActionResult Index()
+        {
+            return RedirectToAction("AvailableCompetition", "Student");
+        }
         public ActionResult Competition(int category = 0)
         {
             if (category == 0 || Request.QueryString["category"] == null)

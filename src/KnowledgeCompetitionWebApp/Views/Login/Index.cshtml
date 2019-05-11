@@ -36,7 +36,7 @@
                 let formData = $("form").serialize();
                 $.ajax({
                     type: 'POST',
-                    url: '@Url.Action("TryLogin", "Login")',
+                    url: '@Url.Action("Login", "Login")',
                     data: formData,
                     dataType: 'json',
                     success: function (data) {

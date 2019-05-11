@@ -16,7 +16,10 @@ namespace KnowledgeCompetitionWebApp.Controllers
         {
             dbContext = new Context();
         }
-
+        public ActionResult Index()
+        {
+            return RedirectToAction("Student", "Admin");
+        }
         public ActionResult Student()
         {
             try
