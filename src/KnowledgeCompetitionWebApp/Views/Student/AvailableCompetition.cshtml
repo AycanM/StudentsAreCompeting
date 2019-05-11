@@ -7,7 +7,7 @@
 
 @foreach (var category in Model)
 {
-    <a href="#" data-id="@category.Id">
+    <a data-id="@category.Id" class="category-selection">
         <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
             <div class="card">
                 <div class="header bg-purple">
@@ -23,7 +23,7 @@
 @section scripts{
     <script>
         $(document).ready(function () {
-            $("a").click(function (e) {
+            $(".category-selection").click(function (e) {
                 e.preventDefault();
                 let id = $(this).data('id');
                 console.log(id);
