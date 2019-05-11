@@ -18,5 +18,8 @@ namespace KnowledgeCompetitionWebApp.Models
 
         public Category Category { get; set; }
 
+        public ICollection<Competition> Competitions { get; set; }
+
+
     }
 }

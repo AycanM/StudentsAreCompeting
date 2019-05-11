@@ -34,7 +34,7 @@ namespace KnowledgeCompetitionWebApp.Controllers
 
                 dbContext.Users.Add(user);
                 dbContext.SaveChangesAsync();
-                return Json(new{ status = 1 });
+                return Json(new { status = 1 });
 
             }
             catch (Exception ex)
@@ -73,22 +73,21 @@ namespace KnowledgeCompetitionWebApp.Controllers
                     }
                 );
             }
-                
+
         }
 
         public JsonResult Question(string question, string optionA, string optionB, string optionC, string optionD, string correct, int categoryId, int level)
         {
             try
             {
-                if (string.IsNullOrEmpty(question) || string.IsNullOrEmpty(optionA) || string.IsNullOrEmpty(optionB)  ||
-                    string.IsNullOrEmpty(optionC)  || string.IsNullOrEmpty(optionD) || string.IsNullOrEmpty(correct)  || categoryId <= 0)
-                        throw new Exception();
+                if (string.IsNullOrEmpty(question) || string.IsNullOrEmpty(optionA) || string.IsNullOrEmpty(optionB) ||
+                    string.IsNullOrEmpty(optionC) || string.IsNullOrEmpty(optionD) || string.IsNullOrEmpty(correct) || categoryId <= 0)
+                    throw new Exception();
                 Question questionEntity = new Question
                 {
                     QuestionTxt = question,
                     OptionA = optionA,
                     OptionB = optionB,
-
                     OptionC = optionC,
                     OptionD = optionD,
                     CategoryId = categoryId,
@@ -123,9 +122,67 @@ namespace KnowledgeCompetitionWebApp.Controllers
                     new
                     {
                         status = 0
-                    } 
+                    }
                 );
             }
+        }
+
+        public JsonResult Competition(int id = -1)
+        {
+            try
+            {
+                List<Question> CompetitionQuestions = new List<Question>();
+                Random randomQuestionIndex = new Random();
+                if (id == -1 || Session["userType"] == null || Convert.ToInt32(Session["userType"]) != 2)
+                    throw new Exception();
+
+                var questions = dbContext.Questions.Where(q => q.CategoryId == id).ToList();
+
+                for (int i = 1; i < 11; i++)
+                {
+                    int questionCount = questions.Count(q => q.Level == i);
+                    int index = randomQuestionIndex.Next(0, questionCount);
+
+                    var questionsInLevel = questions.Where(q => q.Level == i).ToList();
+
+                    CompetitionQuestions.Add(questionsInLevel[index]);
+                }
+
+                Guid guid = Guid.NewGuid();
+                string competitionCode = Convert.ToBase64String(guid.ToByteArray());
+                competitionCode = competitionCode.Replace("=", "")
+                                                 .Replace("+", "")
+                                                 .Replace("-", "")
+                                                 .Replace("/", "");
+                Competition competition = new Competition
+                {
+                    CompetitionCode = competitionCode,
+                    CreatedDate = DateTime.Now,
+                    Questions = CompetitionQuestions
+                };
+
+                dbContext.Competitions.Add(competition);
+                dbContext.SaveChanges();
+                return Json(
+                    new
+                    {
+                        status = 1,
+                        code = competitionCode
+                    }
+                );
+            }
+            catch (Exception)
+            {
+
+                return Json(
+                    new
+                    {
+                        status = 0
+                    }
+                );
+
+            }
+
         }
     }
 }
