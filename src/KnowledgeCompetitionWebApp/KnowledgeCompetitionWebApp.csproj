@@ -3694,7 +3694,6 @@
     <Content Include="Views\Admin\NewQuestion.cshtml" />
     <Content Include="Views\Admin\Question.cshtml" />
     <Content Include="Views\Shared\_StudentLayout.cshtml" />
-    <Content Include="Views\Student\Competition.cshtml" />
     <Content Include="Views\Student\Results.cshtml" />
     <Content Include="Views\Student\AvailableCompetition.cshtml" />
     <Content Include="Views\Teacher\Category.cshtml" />
@@ -3704,6 +3703,7 @@
     <Content Include="Views\Teacher\NewStudent.cshtml" />
     <Content Include="Views\Shared\_LoginLayout.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
+    <Content Include="Views\Student\Competition.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

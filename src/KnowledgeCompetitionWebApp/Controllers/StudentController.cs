@@ -19,11 +19,18 @@ namespace KnowledgeCompetitionWebApp.Controllers
         {
             return RedirectToAction("AvailableCompetition", "Student");
         }
-        public ActionResult Competition(int category = 0)
+
+        public ActionResult Competition(string competition="")
         {
-            if (category == 0 || Request.QueryString["category"] == null)
+            if ((competition == "" || string.IsNullOrEmpty(competition)) && Request.QueryString["competition"] == null)
                 return RedirectToAction("AvailableCompetition", "Student");
-            return View();
+
+            competition = !string.IsNullOrEmpty(competition) ? competition : Request.QueryString["competition"].ToString();
+
+            var competitionModel = dbContext.Competitions.Where(o => o.CompetitionCode == competition).FirstOrDefault();
+            competitionModel.Questions = dbContext.Questions.Select(q => q).Where(q => q.Competitions.FirstOrDefault().Id == competitionModel.Id).ToList();
+
+            return View("Competition", competitionModel);
         }
 
         public ActionResult Results()

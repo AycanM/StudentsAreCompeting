@@ -155,11 +155,13 @@ namespace KnowledgeCompetitionWebApp.Controllers
                                                  .Replace("+", "")
                                                  .Replace("-", "")
                                                  .Replace("/", "");
+                int userId = Convert.ToInt32(Session["userId"]);
                 Competition competition = new Competition
                 {
                     CompetitionCode = competitionCode,
                     CreatedDate = DateTime.Now,
-                    Questions = CompetitionQuestions
+                    Questions = CompetitionQuestions,
+                    UserId = userId
                 };
 
                 dbContext.Competitions.Add(competition);

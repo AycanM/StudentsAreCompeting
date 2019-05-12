@@ -1,6 +1,73 @@
-﻿@model IEnumerable<KnowledgeCompetitionWebApp.Models.Category>
+﻿@model KnowledgeCompetitionWebApp.Models.Competition
 @{
-    ViewBag.Title = "Competition";
     Layout = "~/Views/Shared/_StudentLayout.cshtml";
 }
 
+@for (int i = 0; i < Model.Questions.Count(); i++)
+{
+    var id = "q" + (i+1).ToString();
+    <div class="row clearfix question" id="@id">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+
+                <div class="body">
+                    <strong>SORU: </strong>
+                    @Model.Questions.ElementAt(i).QuestionTxt
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+
+                <div class="body">
+                    <strong>A)&nbsp;</strong>
+                    @Model.Questions.ElementAt(i).OptionA
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+
+                <div class="body">
+                    <strong>B)&nbsp;</strong>
+                    @Model.Questions.ElementAt(i).OptionB
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+
+                <div class="body">
+                    <strong>C)&nbsp;</strong>
+                    @Model.Questions.ElementAt(i).OptionC
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+
+                <div class="body">
+                    <strong>D)&nbsp;</strong>
+                    @Model.Questions.ElementAt(i).OptionD
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+}
+@section scripts{
+        <script>
+            var currentQuestion = 1;
+            $(document).ready(function () {
+                $(".question").hide();
+                ShowNextQuestion();
+            });
+
+            function ShowNextQuestion() {
+                $("#q" + currentQuestion).show();
+            }
+
+        </script>
+}

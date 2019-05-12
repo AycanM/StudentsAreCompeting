@@ -13,6 +13,6 @@ namespace KnowledgeCompetitionWebApp.Models
         public int UserId { get; set; }
 
         public User User { get; set; }
-        public ICollection<Question> Questions { get; set; }
+        public IEnumerable<Question> Questions { get; set; }
     }
 }
