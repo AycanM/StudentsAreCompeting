@@ -87,8 +87,8 @@
                         type: "POST",
                         url: "@Url.Action("Result", "Save")",
                         data: {
-                            competitionId: competitionId,
-                            selectedOption: selectedOption
+                            selectedOption: selectedOption,
+                            competitionId: competitionId
                         },
                         dataType : "json",
                         success: function (data) {
@@ -101,6 +101,13 @@
                                         alert("Yarışma Bitti");
                                     }
                                 }, 500);
+                            }
+                            else if (data.status === 2) {
+                                window.location.href = "@Url.Action("Index", "Login")";
+                            }
+                            else {
+                                alert("Sistemde teknik bir arıza oluştu.Özür dileriz...");
+                                window.location.href = '@Url.Action("AvailableCompetition", "Student")';
                             }
                         }
                     });

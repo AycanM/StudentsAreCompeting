@@ -189,14 +189,33 @@ namespace KnowledgeCompetitionWebApp.Controllers
 
         }
 
-        public JsonResult Result(int competitionId, string selectedOption)
+        public JsonResult Result(string selectedOption, int competitionId = 0)
         {
-            return Json(
-                    new
-                    {
-                        status = 1
-                    }
-            );
+            try
+            {
+                if (Session["userType"] == null || Convert.ToInt32(Session["userType"]) != 2)
+                    return Json(new { status = 2 });
+                if (competitionId == 0 || string.IsNullOrEmpty(selectedOption))
+                    throw new Exception();
+
+                var result = new Result
+                {
+                    CompetitionId = competitionId,
+                    SelectedOption = selectedOption
+                };
+
+                dbContext.Results.Add(result);
+                dbContext.SaveChanges();
+
+                return Json(new { status = 1 });
+            }
+            catch (Exception)
+            {
+                dbContext.Results.RemoveRange(dbContext.Results.Where(r => r.CompetitionId == competitionId));
+                dbContext.SaveChanges();
+                return Json(new { status = 0 });
+            }
+            
         }
     }
 }
