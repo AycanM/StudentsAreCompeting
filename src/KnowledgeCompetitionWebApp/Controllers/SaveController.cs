@@ -134,9 +134,10 @@ namespace KnowledgeCompetitionWebApp.Controllers
             {
                 List<Question> CompetitionQuestions = new List<Question>();
                 Random randomQuestionIndex = new Random();
-                if (id == -1 || Session["userType"] == null || Convert.ToInt32(Session["userType"]) != 2)
+                if (id == -1)
                     throw new Exception();
-
+                if (Session["userType"] == null || Convert.ToInt32(Session["userType"]) != 2)
+                    return Json(new { status = 2 });
                 var questions = dbContext.Questions.Where(q => q.CategoryId == id).ToList();
 
                 for (int i = 1; i < 11; i++)
@@ -186,6 +187,16 @@ namespace KnowledgeCompetitionWebApp.Controllers
 
             }
 
+        }
+
+        public JsonResult Result(int competitionId, string selectedOption)
+        {
+            return Json(
+                    new
+                    {
+                        status = 1
+                    }
+            );
         }
     }
 }

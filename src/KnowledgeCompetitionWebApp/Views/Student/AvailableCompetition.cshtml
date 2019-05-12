@@ -57,6 +57,9 @@
                         if (data.status === 1) {
                             window.location.href = "@Url.Action("Competition", "Student")?competition=" + data.code;
                         }
+                        else if (data.status === 2) {
+                            window.location.href = "@Url.Action("Index", "Login")";
+                        }
                         else {
                             $("#failCompErr").click();
                             //alert("Yarışma başlatılamadı!");

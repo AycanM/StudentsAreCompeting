@@ -22,15 +22,24 @@ namespace KnowledgeCompetitionWebApp.Controllers
 
         public ActionResult Competition(string competition="")
         {
-            if ((competition == "" || string.IsNullOrEmpty(competition)) && Request.QueryString["competition"] == null)
-                return RedirectToAction("AvailableCompetition", "Student");
+            try
+            {
+                if (Session["userType"] == null || Convert.ToInt16(Session["userType"]) != 2)
+                    throw new Exception();
+                if ((competition == "" || string.IsNullOrEmpty(competition)) && Request.QueryString["competition"] == null)
+                    return RedirectToAction("AvailableCompetition", "Student");
 
-            competition = !string.IsNullOrEmpty(competition) ? competition : Request.QueryString["competition"].ToString();
+                competition = !string.IsNullOrEmpty(competition) ? competition : Request.QueryString["competition"].ToString();
 
-            var competitionModel = dbContext.Competitions.Where(o => o.CompetitionCode == competition).FirstOrDefault();
-            competitionModel.Questions = dbContext.Questions.Select(q => q).Where(q => q.Competitions.FirstOrDefault().Id == competitionModel.Id).ToList();
+                var competitionModel = dbContext.Competitions.Where(o => o.CompetitionCode == competition).FirstOrDefault();
+                competitionModel.Questions = dbContext.Questions.Select(q => q).Where(q => q.Competitions.FirstOrDefault().Id == competitionModel.Id).ToList();
 
-            return View("Competition", competitionModel);
+                return View("Competition", competitionModel);
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Index", "Login");
+            }
         }
 
         public ActionResult Results()

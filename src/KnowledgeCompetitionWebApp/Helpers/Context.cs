@@ -20,5 +20,6 @@ namespace KnowledgeCompetitionWebApp.Helpers
         public DbSet<Question> Questions { get; set; }
         public DbSet<CorrectAnswer> CorrectAnswers { get; set; }
         public DbSet<Competition> Competitions { get; set; }
+        public DbSet<Result> Results { get; set; }
     }
 }
