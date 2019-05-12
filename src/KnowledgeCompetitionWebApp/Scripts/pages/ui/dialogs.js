@@ -36,7 +36,11 @@ $(function () {
 
 //These codes takes from http://t4t5.github.io/sweetalert/
 function showBasicMessage() {
-    swal("Here's a message!");
+    swal({
+        title: "Yarisma baslatilamadi",
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Kapat"
+    });
 }
 
 function showWithTitleMessage() {

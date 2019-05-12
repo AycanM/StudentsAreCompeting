@@ -20,7 +20,26 @@
     </a>
 }
 
+<div class="row clearfix js-sweetalert">
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+        <p></p>
+        <button id="failCompErr" class="btn btn-primary waves-effect" data-type="basic" style="display:none;"></button>
+    </div>
+</div>
+
+@section styles
+{
+    <link href="~/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+    <style>
+        .category-selection {
+            cursor: pointer;
+        }
+    </style>
+}
+
 @section scripts{
+    <script src="~/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="~/Scripts/pages/ui/dialogs.js"></script>
     <script>
         $(document).ready(function () {
             $(".category-selection").click(function (e) {
@@ -35,10 +54,16 @@
                     },
                     dataType :'json',
                     success: function (data) {
-
+                        if (data.status === 1) {
+                            window.location.href = "@Url.Action("Competition", "Student")?competition=" + data.code;
+                        }
+                        else {
+                            $("#failCompErr").click();
+                            //alert("Yarışma başlatılamadı!");
+                        }
                     }
                 });
             });
         });
-    </script>    
+    </script>
 }
