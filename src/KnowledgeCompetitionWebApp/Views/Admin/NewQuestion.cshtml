@@ -116,11 +116,11 @@
                 if ($('#question').val().trim() === '' || $('#optionA').val().trim() === '' || $('#optionB').val().trim() === '' || $('#optionC').val().trim() === '' || $('#optionD').val().trim() === '') {
                     return;
                 }
-                else if ($('#correctOption').val() === '') {
+                else if ($('#correctOption').val() === '' || $('#correctOption').val() === 0) {
                     alert('Lütfen doğru seçeneği belirleyiniz');
                     return;
                 }
-                else if ($('#category').val() === '') {
+                else if ($('#category').val() === '' || $('#category').val() === 0) {
                     alert('Lütfen kategori belirleyiniz');
                     return;
                 }
