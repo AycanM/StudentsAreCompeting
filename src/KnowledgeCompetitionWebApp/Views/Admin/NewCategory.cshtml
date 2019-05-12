@@ -20,7 +20,33 @@
                             <label class="form-label">Kategori Adı</label>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="row clearfix">
+                        <div class="col-sm-12">
+                            <select class="form-control show-tick" id="colorSelection" name="color">
+                                <option value="0" selected>-- Lütfen kategori rengini belirleyiniz --</option>
+                                <option value="bg-red">Kırmızı</option>
+                                <option value="bg-green">Yeşil</option>
+                                <option value="bg-blue">Mavi</option>
+                                <option value="bg-yellow">Sarı</option>
+                                <option value="bg-pink">Pembe</option>
+                                <option value="bg-purple">Mor</option>
+                                <option value="bg-deep-purple">Koyu Mor</option>
+                                <option value="bg-indigo">Çivit Mavisi</option>
+                                <option value="bg-light-blue">Açık Mavi</option>
+                                <option value="bg-cyan">Gök Mavisi</option>
+                                <option value="bg-teal">Teal</option>
+                                <option value="bg-light-green">Açık Yeşil</option>
+                                <option value="bg-lime">Lime</option>
+                                <option value="bg-amber">Kehribar</option>
+                                <option value="bg-orange">Turuncu</option>
+                                <option value="bg-deep-orange">Koyu Turuncu</option>
+                                <option value="bg-brown">Kahverengi</option>
+                                <option value="bg-grey">Gri</option>
+                                <option value="bg-blue-grey">Mavi-Gri</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group form-float">
                         <input type="radio" name="active" id="active" class="with-gap" value="1">
                         <label for="active">Aktif</label>
 
@@ -42,8 +68,12 @@
         </div>
     </div>
 </div>
-@section scripts{
+@section styles{
+    <link href="~/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+}
 
+@section scripts{
+    <script src="~/plugins/bootstrap-select/js/bootstrap-select.js"></script>
     <script>
         $(document).ready(function () {
             $(".alert").hide();
@@ -52,8 +82,13 @@
                 if ($('input[name="category"]').val().trim() === '') {
                     return;
                 }
+                else if ($('#colorSelection').val() === '' || $('#colorSelection').val() === 0)
+                {
+                    alert("Lütfen renk seçimi yapınız!");
+                    return;
+                }
                 else {
-                    
+
                     let isActive = $('input[name="active"]:checked').val() === "0" ? false : true;
                     console.log(isActive);
                     $.ajax({
@@ -61,6 +96,7 @@
                         url: '@Url.Action("Category", "Save")',
                         data: {
                             categoryName: $('#category').val(),
+                            color: $('#colorSelection').val(),
                             isActive: isActive
                         },
                         datatype: "json",
@@ -86,6 +122,9 @@
                                     $(".alert-warning").fadeOut(2500);
                                 }, 2000);
                             }
+
+                            $('[data-id="#colorSelection"]').attr("title", "-- Lütfen kategori rengini belirleyiniz --");
+                            $('[data-id="#colorSelection"] .filter-option').html("-- Lütfen kategori rengini belirleyiniz --");
                         }
                     });
                 }

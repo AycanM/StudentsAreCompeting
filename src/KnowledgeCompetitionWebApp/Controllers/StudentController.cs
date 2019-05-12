@@ -51,7 +51,7 @@ namespace KnowledgeCompetitionWebApp.Controllers
                 {
                     List<Models.Category> model = new List<Models.Category>();
                     List<Models.Question> questions;
-                    foreach (Models.Category category in dbContext.Categories)
+                    foreach (Models.Category category in dbContext.Categories.Where(c => c.IsActive))
                     {
                         questions = dbContext.Questions.Where(q => q.CategoryId == category.Id).ToList();
                         if (questions.Any(q => q.Level == 1) &&

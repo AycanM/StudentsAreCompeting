@@ -43,7 +43,7 @@ namespace KnowledgeCompetitionWebApp.Controllers
             }
         }
 
-        public JsonResult Category(string categoryName, bool isActive)
+        public JsonResult Category(string categoryName, string color, bool isActive)
         {
             try
             {
@@ -55,6 +55,7 @@ namespace KnowledgeCompetitionWebApp.Controllers
                 Category category = new Category
                 {
                     Name = categoryName,
+                    Color = color,
                     IsActive = isActive
                 };
 
