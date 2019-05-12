@@ -9,6 +9,12 @@ namespace KnowledgeCompetitionWebApp.Helpers
 {
     public class Context : DbContext
     {
+
+        public Context() : base()
+        {
+            Database.SetInitializer(new DataInitializer());
+        }
+
         public DbSet<User> Users { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Question> Questions { get; set; }
