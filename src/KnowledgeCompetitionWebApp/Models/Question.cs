@@ -17,7 +17,7 @@ namespace KnowledgeCompetitionWebApp.Models
         public int CategoryId { get; set; }
 
         public Category Category { get; set; }
-
+        public CorrectAnswer CorrectAnswer { get; set; }
         public List<Competition> Competitions { get; set; }
 
 
