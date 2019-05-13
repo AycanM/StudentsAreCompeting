@@ -162,7 +162,8 @@ namespace KnowledgeCompetitionWebApp.Controllers
                     CompetitionCode = competitionCode,
                     CreatedDate = DateTime.Now,
                     Questions = CompetitionQuestions,
-                    UserId = userId
+                    UserId = userId,
+                    CategoryId = id
                 };
 
                 dbContext.Competitions.Add(competition);
