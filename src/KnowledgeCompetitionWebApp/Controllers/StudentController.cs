@@ -20,7 +20,7 @@ namespace KnowledgeCompetitionWebApp.Controllers
             return RedirectToAction("AvailableCompetition", "Student");
         }
 
-        public ActionResult Competition(string competition="")
+        public ActionResult Competition(string competition = "")
         {
             try
             {
@@ -42,42 +42,65 @@ namespace KnowledgeCompetitionWebApp.Controllers
             }
         }
 
-        public ActionResult Results()
+        public ActionResult Results(int ResultId = -1)
         {
             try
             {
                 if (Session["userType"] != null && Convert.ToInt16(Session["userType"]) == 2)
                 {
-                    List<Models.ResultsToDisplay> results = new List<Models.ResultsToDisplay>();
                     int userId = Convert.ToInt16(Session["userId"]);
+
+                    if (ResultId != -1)
+                    {
+                        var questions = dbContext.Questions.Where(q => q.Competitions.Any(c => c.Id == ResultId)).ToList();
+                        var catId = questions.FirstOrDefault().CategoryId;
+                        var correctAnswers = new List<Models.CorrectAnswer>();
+                        foreach (var question in questions)
+                        {
+                            var correctAnswer = dbContext.CorrectAnswers.Where(a => a.QuestionId == question.Id).FirstOrDefault();
+                            correctAnswers.Add(correctAnswer);
+                        }
+                        Models.CompetitionDetail competitionDetail = new Models.CompetitionDetail
+                        {
+                            User = dbContext.Users.Where(u => u.Id == userId).FirstOrDefault(),
+                            Competition = dbContext.Competitions.Where(c => c.Id == ResultId).FirstOrDefault(),
+                            Questions = dbContext.Questions.Where(q => q.Competitions.Any(c => c.Id == ResultId)).ToList(),
+                            Results = dbContext.Results.Where(r => r.CompetitionId == ResultId).ToList(),
+                            CorrectAnswers = correctAnswers,
+                            CategoryName = dbContext.Categories.Where(c => c.Id == catId).FirstOrDefault().Name
+                        };
+
+                        return View("CompetitionDetail", competitionDetail);
+                    }
+
+                    List<Models.ResultsToDisplay> results = new List<Models.ResultsToDisplay>();
                     var competitions = dbContext.Competitions.Where(o => o.UserId == userId).ToList();
                     foreach (var competition in competitions)
                     {
                         competition.Questions = dbContext.Questions.Where(q => q.Competitions.Any(c => c.Id == competition.Id)).ToList();
                         var categoryId = 0;
-                        if(competition.Questions.FirstOrDefault() != null && competition.Questions.Count > 0)
+                        if (competition.Questions.FirstOrDefault() != null && competition.Questions.Count > 0)
                         {
                             categoryId = competition.Questions.FirstOrDefault().CategoryId;
                         }
 
                         results.Add(
-                            new Models.ResultsToDisplay {
-                                CompetitionId   = competition.Id,
-                                QuestionsCount  = competition.Questions.Count(),
-                                AnsweredCount   = dbContext.Results.Where(r => r.CompetitionId == competition.Id).Count(),
-                                CategoryName    = dbContext.Categories.FirstOrDefault(c => c.Id == categoryId).Name,
+                            new Models.ResultsToDisplay
+                            {
+                                CompetitionId = competition.Id,
+                                QuestionsCount = competition.Questions.Count(),
+                                AnsweredCount = dbContext.Results.Where(r => r.CompetitionId == competition.Id).Count(),
+                                CategoryName = dbContext.Categories.FirstOrDefault(c => c.Id == categoryId).Name,
                                 CompetitionDate = competition.CreatedDate
                             }
                         );
-
-                        
                     }
 
                     return View("Results", results.OrderByDescending(r => r.CompetitionDate));
                 }
                 return RedirectToAction("Index", "Login");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return RedirectToAction("Index", "Login");
             }
