@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -13,8 +14,9 @@ namespace KnowledgeCompetitionWebApp.Models
         public int UserId { get; set; }
         public int CategoryId { get; set; }
 
-        public User User { get; set; }
-        public Category Category { get; set; }
+        [ForeignKey("UserId")]
+        public virtual User User { get; set; }
+        
         public List<Question> Questions { get; set; }
         public List<Result> Results { get; set; }
     }
