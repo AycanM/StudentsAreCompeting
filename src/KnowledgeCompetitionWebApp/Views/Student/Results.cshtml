@@ -1,30 +1,28 @@
-﻿@model IEnumerable<KnowledgeCompetitionWebApp.Models.Competition>
+﻿@model IEnumerable<KnowledgeCompetitionWebApp.Models.ResultsToDisplay>
 @{
-    ViewBag.Title = "Results";
     Layout = "~/Views/Shared/_StudentLayout.cshtml";
 }
 
 
 <div class="row clearfix">
-    @foreach (var competition in Model)
+    @foreach (var result in Model)
     {
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 result" data-competition="">
+        <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 result" data-competition="">
             <div class="card">
-
                 <div class="body">
                     <div class="list-group">
                         <a href="javascript:void(0);" class="list-group-item active">
-                            <h4 class="list-group-item-heading"><strong>Kategori: </strong>@competition.Category.Name</h4>
+                            <h4 class="list-group-item-heading"><strong>Kategori: </strong>@result.CategoryName.ToUpper()</h4>
 
                         </a>
                         <a href="javascript:void(0);" class="list-group-item">
-                            <h4 class="list-group-item-heading"><strong>Tarih: </strong>@competition.CreatedDate.ToString("dd/MM/yyyy HH:mm:ss")</h4>
+                            <h4 class="list-group-item-heading"><strong>Tarih: </strong>@result.CompetitionDate</h4>
                         </a>
                         <a href="javascript:void(0);" class="list-group-item">
-                            <h4 class="list-group-item-heading"><strong>Sorulan Soru Adeti: </strong>@competition.Questions.Count</h4>
+                            <h4 class="list-group-item-heading"><strong>Sorulan Soru Adeti: </strong>@result.QuestionsCount</h4>
                         </a>
                         <a href="javascript:void(0);" class="list-group-item">
-                            <h4 class="list-group-item-heading"><strong>Cevaplanan Soru Adeti: </strong>@competition.Results.Count</h4>
+                            <h4 class="list-group-item-heading"><strong>Cevaplanan Soru Adeti: </strong>@result.AnsweredCount</h4>
                         </a>
                     </div>
                 </div>

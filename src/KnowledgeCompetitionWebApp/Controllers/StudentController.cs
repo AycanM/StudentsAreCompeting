@@ -48,11 +48,38 @@ namespace KnowledgeCompetitionWebApp.Controllers
             {
                 if (Session["userType"] != null && Convert.ToInt16(Session["userType"]) == 2)
                 {
-                    return View();
+                    List<Models.ResultsToDisplay> results = new List<Models.ResultsToDisplay>();
+                    int userId = Convert.ToInt16(Session["userId"]);
+                    var competitions = dbContext.Competitions.Where(o => o.UserId == userId).ToList();
+                    foreach (var competition in competitions)
+                    {
+                        int CompetitionId = competition.Id;
+                        competition.Questions = dbContext.Questions.Where(q => q.Competitions.FirstOrDefault().Id == competition.Id).ToList();
+                        int QuestionCount = dbContext.Questions.Where(q => q.Competitions.FirstOrDefault().Id == competition.Id).Count(); //10
+                        int AnsweredCount = dbContext.Results.Where(r => r.CompetitionId == competition.Id).Count();
+                        var categoryId = competition.Questions.FirstOrDefault().CategoryId;
+
+                        string CategoryName = dbContext.Categories.FirstOrDefault(c => c.Id == categoryId).Name;
+                        string CompetitionDate = competition.CreatedDate.ToString("dd/MM/yyyy HH:mm:ss");
+
+                        results.Add(
+                            new Models.ResultsToDisplay {
+                                CompetitionId   = competition.Id,
+                                QuestionsCount  = competition.Questions.Count(),
+                                AnsweredCount   = dbContext.Results.Where(r => r.CompetitionId == competition.Id).Count(),
+                                CategoryName    = dbContext.Categories.FirstOrDefault(c => c.Id == categoryId).Name,
+                                CompetitionDate = competition.CreatedDate.ToString("dd/MM/yyyy HH:mm:ss")
+                            }
+                        );
+
+                        
+                    }
+
+                    return View("Results", results);
                 }
                 return RedirectToAction("Index", "Login");
             }
-            catch
+            catch(Exception ex)
             {
                 return RedirectToAction("Index", "Login");
             }
