@@ -214,5 +214,48 @@ namespace KnowledgeCompetitionWebApp.Controllers
             }
         }
 
+        public ActionResult Results(int studentId = -1)
+        {
+            try
+            {
+                if (Session["userType"] != null && Convert.ToInt16(Session["userType"]) == 0)
+                {
+                    if (studentId <= 0)
+                        throw new Exception();
+                    List<Models.ResultsToDisplay> results = new List<Models.ResultsToDisplay>();
+                    var competitions = dbContext.Competitions.Where(o => o.UserId == studentId).ToList();
+                    foreach (var competition in competitions)
+                    {
+                        competition.Questions = dbContext.Questions.Where(q => q.Competitions.Any(c => c.Id == competition.Id)).ToList();
+                        var categoryId = 0;
+                        if (competition.Questions.FirstOrDefault() != null && competition.Questions.Count > 0)
+                        {
+                            categoryId = competition.Questions.FirstOrDefault().CategoryId;
+                        }
+
+                        results.Add(
+                            new Models.ResultsToDisplay
+                            {
+                                CompetitionId = competition.Id,
+                                QuestionsCount = competition.Questions.Count(),
+                                AnsweredCount = dbContext.Results.Where(r => r.CompetitionId == competition.Id).Count(),
+                                CategoryName = dbContext.Categories.FirstOrDefault(c => c.Id == categoryId).Name,
+                                CompetitionDate = competition.CreatedDate
+                            }
+                        );
+                    }
+
+                    return View("Results", results.OrderByDescending(r => r.CompetitionDate));
+
+                }
+
+                    return RedirectToAction("Index", "Login");
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+        }
+
     }
 }
