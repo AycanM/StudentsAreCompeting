@@ -32,7 +32,7 @@ namespace KnowledgeCompetitionWebApp.Controllers
                 competition = !string.IsNullOrEmpty(competition) ? competition : Request.QueryString["competition"].ToString();
 
                 var competitionModel = dbContext.Competitions.Where(o => o.CompetitionCode == competition).FirstOrDefault();
-                competitionModel.Questions = dbContext.Questions.Select(q => q).Where(q => q.Competitions.FirstOrDefault().Id == competitionModel.Id).ToList();
+                competitionModel.Questions = dbContext.Questions.Where(q => q.Competitions.Any(c => c.Id == competitionModel.Id)).ToList();
 
                 return View("Competition", competitionModel);
             }
@@ -53,14 +53,12 @@ namespace KnowledgeCompetitionWebApp.Controllers
                     var competitions = dbContext.Competitions.Where(o => o.UserId == userId).ToList();
                     foreach (var competition in competitions)
                     {
-                        int CompetitionId = competition.Id;
-                        competition.Questions = dbContext.Questions.Where(q => q.Competitions.FirstOrDefault().Id == competition.Id).ToList();
-                        int QuestionCount = dbContext.Questions.Where(q => q.Competitions.FirstOrDefault().Id == competition.Id).Count(); //10
-                        int AnsweredCount = dbContext.Results.Where(r => r.CompetitionId == competition.Id).Count();
-                        var categoryId = competition.Questions.FirstOrDefault().CategoryId;
-
-                        string CategoryName = dbContext.Categories.FirstOrDefault(c => c.Id == categoryId).Name;
-                        string CompetitionDate = competition.CreatedDate.ToString("dd/MM/yyyy HH:mm:ss");
+                        competition.Questions = dbContext.Questions.Where(q => q.Competitions.Any(c => c.Id == competition.Id)).ToList();
+                        var categoryId = 0;
+                        if(competition.Questions.FirstOrDefault() != null && competition.Questions.Count > 0)
+                        {
+                            categoryId = competition.Questions.FirstOrDefault().CategoryId;
+                        }
 
                         results.Add(
                             new Models.ResultsToDisplay {
@@ -68,14 +66,14 @@ namespace KnowledgeCompetitionWebApp.Controllers
                                 QuestionsCount  = competition.Questions.Count(),
                                 AnsweredCount   = dbContext.Results.Where(r => r.CompetitionId == competition.Id).Count(),
                                 CategoryName    = dbContext.Categories.FirstOrDefault(c => c.Id == categoryId).Name,
-                                CompetitionDate = competition.CreatedDate.ToString("dd/MM/yyyy HH:mm:ss")
+                                CompetitionDate = competition.CreatedDate
                             }
                         );
 
                         
                     }
 
-                    return View("Results", results);
+                    return View("Results", results.OrderByDescending(r => r.CompetitionDate));
                 }
                 return RedirectToAction("Index", "Login");
             }
