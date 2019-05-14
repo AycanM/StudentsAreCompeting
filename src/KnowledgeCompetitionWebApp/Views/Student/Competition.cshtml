@@ -94,11 +94,11 @@
                         success: function (data) {
                             if (data.status === 1) {
                                 currentQuestion++;
-                                console.log(currentQuestion);
                                 setTimeout(function () {
                                     $("#q" + currentQuestion).fadeIn();
                                     if (currentQuestion > 10) {
                                         alert("Yarışma Bitti");
+                                        window.location.href = "@Url.Action("Results", "Student")?ResultId=" + competitionId;
                                     }
                                 }, 500);
                             }
