@@ -11,7 +11,7 @@ namespace KnowledgeCompetitionWebApp.Models
         public int QuestionsCount { get; set; }
         public int AnsweredCount { get; set; }
         public string CategoryName { get; set; }
-        public string CompetitionDate { get; set; }
+        public DateTime CompetitionDate { get; set; }
 
     }
 }
