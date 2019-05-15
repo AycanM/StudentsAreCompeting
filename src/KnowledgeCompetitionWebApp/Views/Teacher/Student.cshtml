@@ -54,7 +54,7 @@
                                         <th id="col_surname_@student.Id">@student.Surname</th>
                                         <th id="col_name_@student.Id">@student.Email</th>
                                         <th>
-                                            <a type="button" href="/@student.Id" class="btn bg-cyan waves-effect" id="info_@student.Id">
+                                            <a type="button" href="@Url.Action("Results", "Teacher", new { studentId = student.Id })" class="btn bg-cyan waves-effect" id="info_@student.Id">
                                                 <i class="material-icons">trending_up</i>
                                                 <span>İncele</span>
                                             </a>

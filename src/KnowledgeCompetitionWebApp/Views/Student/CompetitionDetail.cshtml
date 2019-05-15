@@ -41,14 +41,31 @@
                                     </strong>
                                 </td>
                                 <td>
-                                    <strong>
-                                        @Model.Results.ElementAt(i).SelectedOption.ToUpper()
-                                    </strong>
+                                    @if (i < Model.Results.Count)
+                                    {
+
+                                        <strong>
+                                            @Model.Results.ElementAt(i).SelectedOption.ToUpper()
+                                        </strong>
+                                    }
+                                    else
+                                    {
+                                        <strong>
+                                            BOŞ
+                                        </strong>
+                                    }
                                 </td>
                                 <td>
-                                    @if (Model.CorrectAnswers.ElementAt(i).CorrectOption == Model.Results.ElementAt(i).SelectedOption)
+                                    @if (i < Model.Results.Count)
                                     {
-                                        <i class="material-icons">done</i>
+                                        if (Model.CorrectAnswers.ElementAt(i).CorrectOption == Model.Results.ElementAt(i).SelectedOption)
+                                        {
+                                            <i class="material-icons">done</i>
+                                        }
+                                        else
+                                        {
+                                            <i class="material-icons">clear</i>
+                                        }
                                     }
                                     else
                                     {
