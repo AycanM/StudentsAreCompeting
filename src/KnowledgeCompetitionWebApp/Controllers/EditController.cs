@@ -110,7 +110,7 @@ namespace KnowledgeCompetitionWebApp.Controllers
                 optionB = question.OptionB,
                 optionC = question.OptionC,
                 optionD = question.OptionD,
-                correctOption = dbContext.CorrectAnswers.Where(a => a.QuestionId == id).FirstOrDefault(),
+                correctOption = dbContext.CorrectAnswers.Where(a => a.QuestionId == id).FirstOrDefault().CorrectOption,
                 category = question.CategoryId,
                 categoryName = dbContext.Categories.Where(c => c.Id == question.CategoryId).Select(c => c.Name).FirstOrDefault(),
                 level = question.Level

@@ -67,7 +67,7 @@
                                         <th>@question.OptionB</th>
                                         <th>@question.OptionC</th>
                                         <th>@question.OptionD</th>
-                                        <th>@Model.CorrectOptions.Where(a => a.QuestionId == question.Id).Select(a => a.CorrectOption).FirstOrDefault()</th>
+                                        <th>@Model.CorrectOptions.Where(a => a.QuestionId == question.Id).Select(a => a.CorrectOption).FirstOrDefault().ToUpper()</th>
                                         <th>@Model.Categories.Where(c => c.Id == question.CategoryId).Select(c => c.Name).FirstOrDefault()</th>
                                         <th>@question.Level</th>
                                         <th>
@@ -278,7 +278,7 @@
 
                         $("#correctOption").val(data.correctOption);
                         $('[data-id="correctOption"]').attr("title", data.correctOption);
-                        $('[data-id="correctOption"] .filter-option').html(data.correctOption);
+                        $('[data-id="correctOption"] .filter-option').html(data.correctOption.toUpperCase());
 
                         $("#category").val(data.category);
                         $('[data-id="category"]').attr("title", data.categoryName);
