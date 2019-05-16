@@ -2,6 +2,7 @@
 using KnowledgeCompetitionWebApp.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -17,12 +18,23 @@ namespace KnowledgeCompetitionWebApp.Controllers
         }
 
 
-        public JsonResult User(string name, string surname, string email, string password, int userType)
+        public JsonResult User(string name, string surname, string email, string password = "" , int userType = -1)
         {
             try
             {
                 if (dbContext.Users.Any(p => p.Email.Trim() == email.Trim()))
                     return Json(new { status = 2 });
+                if (userType == -1)
+                    throw new Exception();
+
+                Guid guid = Guid.NewGuid();
+                password = Convert.ToBase64String(guid.ToByteArray()).Substring(0,6);
+
+                string mailBody = GetMailBody(name, password);
+
+                if (!MailOperations.SendRegistrationMail(email, mailBody))
+                    throw new Exception();
+
                 User user = new User
                 {
                     Name = name,
@@ -217,6 +229,27 @@ namespace KnowledgeCompetitionWebApp.Controllers
                 return Json(new { status = 0 });
             }
             
+        }
+        private string GetMailBody(string name, string password)
+        {
+            return RenderPartialViewToString("_EmailLayout", new RegisterEmail { Name = name, Password = password });
+        }
+        protected string RenderPartialViewToString(string viewName, object model)
+        {
+            if (string.IsNullOrEmpty(viewName))
+                viewName = ControllerContext.RouteData.GetRequiredString("action");
+
+            ViewData.Model = model;
+
+
+            using (StringWriter sw = new StringWriter())
+            {
+                ViewEngineResult viewResult = ViewEngines.Engines.FindPartialView(ControllerContext, viewName);
+                ViewContext viewContext = new ViewContext(ControllerContext, viewResult.View, ViewData, TempData, sw);
+                viewResult.View.Render(viewContext, sw);
+
+                return sw.GetStringBuilder().ToString();
+            }
         }
     }
 }

@@ -32,13 +32,13 @@
                         </div>
                         <label id="email-error" class="error" for="email" style="display: none;"></label>
                     </div>
-                    <div class="form-group form-float">
+                    @*<div class="form-group form-float">
                         <div class="form-line">
                             <input type="password" class="form-control" name="minmaxlength" maxlength="20" minlength="6" required="" aria-required="true">
                             <label class="form-label">Parola</label>
                         </div>
                         <div class="help-info">Min. 6, Maks. 20 karakter</div>
-                    </div>
+                    </div>*@
                     <button class="btn btn-primary waves-effect" type="submit">KAYDET</button>
                 </form>
                 <div class="alert alert-success m-t-10">
@@ -61,15 +61,15 @@
             $(".alert").hide();
             $('form').submit(function (event) {
                 event.preventDefault();
-                if ($('input[name="name"]').val().trim() === '' || $('input[name="surname"]').val().trim() === '' || $('input[name="email"]').val().trim() === '' || $('input[name="minmaxlength"]').val().trim() == '') {
+                if ($('input[name="name"]').val().trim() === '' || $('input[name="surname"]').val().trim() === '' || $('input[name="email"]').val().trim() === '') {/* || $('input[name="minmaxlength"]').val().trim() == '') {*/
                     return;
                 }
                 else if (!isValidEmailAddress($('input[name="email"]').val().trim())) {
                     return;
                 }
-                else if ($('input[name="minmaxlength"]').val().length < 6 || $('input[name="minmaxlength"]').val().length > 20) {
-                    return;
-                }
+                //else if ($('input[name="minmaxlength"]').val().length < 6 || $('input[name="minmaxlength"]').val().length > 20) {
+                //    return;
+                //}
                 else {
                     var formData = $('#form_advanced_validation').serialize();
                     console.log(formData);
@@ -80,7 +80,7 @@
                             name: $('input[name="name"]').val().trim(),
                             surname: $('input[name="surname"]').val().trim(),
                             email: $('input[name="email"]').val().trim(),
-                            password: $('input[name="minmaxlength"]').val().trim(),
+                            //password: $('input[name="minmaxlength"]').val().trim(),
                             userType : 2
                         },
                         datatype: "json",
