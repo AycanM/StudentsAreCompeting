@@ -164,8 +164,9 @@
                                 setTimeout(function () {
                                     $("#update_success").fadeOut();
                                     $("#UpdateCategoryModal").modal("hide");
+                                    location.reload();
                                 }, 2000);
-
+                                
                             }
                             else {
                                 $("#update_warning").fadeIn();
