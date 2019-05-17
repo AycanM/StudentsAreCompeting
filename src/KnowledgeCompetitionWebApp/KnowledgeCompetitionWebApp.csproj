@@ -3719,6 +3719,10 @@
     <Content Include="Views\Teacher\Results.cshtml" />
     <Content Include="Views\Teacher\CompetitionDetail.cshtml" />
     <Content Include="Views\Shared\_EmailLayout.cshtml" />
+    <Content Include="Views\Admin\UserProfile.cshtml" />
+    <Content Include="Views\Student\UserProfile.cshtml" />
+    <Content Include="Views\Teacher\UserProfile.cshtml" />
+    <Content Include="Views\Shared\ChangePassword.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

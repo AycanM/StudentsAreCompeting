@@ -154,5 +154,28 @@ namespace KnowledgeCompetitionWebApp.Controllers
                 );
             }
         }
+
+        public JsonResult Password(string OldPassword, string NewPassword)
+        {
+            try
+            {
+                //if (Session["userId"] == null || Session["userType"] == null || Session["userName"] == null || Session["surName"] == null || Session["userEmail"] == null)
+                //return Json(new { status = 0 });
+                int userID = Convert.ToInt32(Session["userId"]);
+                var user = dbContext.Users.Where(u => u.Id == userID && u.Password == OldPassword.Trim()).FirstOrDefault();
+                if(user == null)
+                    return Json(new { status = 2 });
+
+                user.Password = NewPassword;
+                dbContext.SaveChanges();
+                return Json(new { status = 1 });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = 0 });
+            }
+
+        }
     }
 }

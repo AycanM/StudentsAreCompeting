@@ -143,5 +143,12 @@ namespace KnowledgeCompetitionWebApp.Controllers
                 return RedirectToAction("Index", "Login");
             }
         }
+
+        public ActionResult UserProfile()
+        {
+            if (Session["userType"] == null && Convert.ToInt16(Session["userType"]) == 0)
+                return RedirectToAction("Index", "Login");
+            return View();
+        }
     }
 }

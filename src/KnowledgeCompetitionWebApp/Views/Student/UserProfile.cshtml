@@ -1,0 +1,70 @@
+﻿
+@{
+    ViewBag.Title = "Profile";
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+}
+
+
+@Html.Partial("~/Views/Shared/ChangePassword.cshtml")
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $(".alert").hide();
+            $('form').submit(function (event) {
+                event.preventDefault();
+                if ($('.pass').val().trim() === '' || $('.pass').val().length < 6 || $('.pass').val().length > 20) {
+                    return;
+                }
+                else if ($('#NewPassword').val() !== $('#NewPasswordCnfrm').val()) {
+                    console.log($('#NewPassword').val());
+                    console.log($('#NewPasswordCnfrm').val());
+                    $('#NotMatched').fadeIn();
+                    setTimeout(function () {
+                        $('#NotMatched').fadeOut();
+                    }, 2000);
+                }
+                else if ($('#NewPassword').val() === $('#OldPassword').val()) {
+                    $('#NotChange').fadeIn();
+                    setTimeout(function () {
+                        $('#NotChange').fadeOut();
+                    }, 2000);
+                }
+                else {
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("Password", "Edit")',
+                        data: {
+                            OldPassword: $('#OldPassword').val().trim(),
+                            NewPassword: $('#NewPassword').val().trim(),
+                        },
+                        datatype: "json",
+                        success: function (data) {
+                            if (data.status === 0) {
+                                $('#PassErr').fadeIn();
+                                setTimeout(function () {
+                                    $('#PassErr').fadeOut();
+                                }, 2000);
+                            }
+                            else if (data.status === 1) {
+                                $('.alert-success').fadeIn();
+                                setTimeout(function () {
+                                    $('.alert-success').fadeOut();
+                                    location.href = "@Url.Action("SignOut", "Login")";
+                                }, 2000);
+                            }
+                            else if (data.status === 2) {
+                                $('#NotInDb').fadeIn();
+                                setTimeout(function () {
+                                    $('#NotInDb').fadeOut();
+                                }, 2000);
+                            }
+                        }
+                    });
+                    $('#form_advanced_validation').trigger("reset");
+                }
+            });
+        });
+    </script>
+
+}

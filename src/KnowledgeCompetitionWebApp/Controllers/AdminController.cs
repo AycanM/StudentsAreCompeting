@@ -191,14 +191,14 @@ namespace KnowledgeCompetitionWebApp.Controllers
 
                 return RedirectToAction("Index", "Login");
             }
-            catch 
+            catch
             {
                 return RedirectToAction("Index", "Login");
             }
         }
 
         public ActionResult NewQuestion()
-        {   
+        {
             try
             {
                 if (Session["userType"] != null && Convert.ToInt16(Session["userType"]) == 0)
@@ -252,7 +252,7 @@ namespace KnowledgeCompetitionWebApp.Controllers
 
                 }
 
-                    return RedirectToAction("Index", "Login");
+                return RedirectToAction("Index", "Login");
             }
             catch (Exception ex)
             {
@@ -294,6 +294,13 @@ namespace KnowledgeCompetitionWebApp.Controllers
             {
                 return RedirectToAction("Index", "Login");
             }
+        }
+
+        public ActionResult UserProfile()
+        {
+            if (Session["userType"] == null && Convert.ToInt16(Session["userType"]) == 0)
+                return RedirectToAction("Index", "Login");
+            return View();
         }
 
     }
