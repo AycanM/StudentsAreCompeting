@@ -70,15 +70,15 @@ namespace KnowledgeCompetitionWebApp.Controllers
             });
         }
 
-        public JsonResult Category(int id, string name, bool isActive)
+        public JsonResult Category(int id, string categoryName, bool isActive)
 
         {
             try
             {
-                if (dbContext.Categories.Where(q => q.Id != id).Any(c => c.Name.Trim() == name.Trim()))
+                if (dbContext.Categories.Where(q => q.Id != id).Any(c => c.Name.Trim() == categoryName.Trim()))
                     return Json(new { status = 2 });
                 var categoryEntity = dbContext.Categories.Where(c => c.Id == id).FirstOrDefault();
-                categoryEntity.Name = name;
+                categoryEntity.Name = categoryName;
                 categoryEntity.IsActive = isActive;
 
                 dbContext.SaveChanges();
