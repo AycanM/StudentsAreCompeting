@@ -233,6 +233,7 @@
                                 setTimeout(function () {
                                     $("#update_success").fadeOut();
                                     $("#UpdateQuestionModal").modal("hide");
+                                    location.reload();
                                 }, 2000);
                             }
                             if (data.status === 2) { // Aynı emaile sahip bir kayıt olması durumunda
